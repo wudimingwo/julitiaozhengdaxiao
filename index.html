@@ -1,0 +1,113 @@
+    
+<html>
+    <head>
+        <meta charset="UTF-8"/>
+        <title>practice</title>
+        <style type="text/css">
+            .wrapper {
+                width: 800px;
+                height: 300px;
+                margin: 300px auto;
+            }
+            .wrapper a {
+                text-decoration: none;
+            }
+            .wrapper a img{
+                width: 100px;
+                height: 100px;
+                border-radius: 50%;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <div class="wrapper">
+            <a href="javascript:void(0);">
+                <img src="img/1.jpg"/>
+            </a>
+            <a href="javascript:void(0);">
+                <img src="img/2.jpg"/>
+            </a>
+            <a href="javascript:void(0);">
+                <img src="img/3.jpg"/>
+            </a>
+            <a href="javascript:void(0);">
+                <img src="img/4.jpg"/>
+            </a>
+            <a href="javascript:void(0);">
+                <img src="img/5.jpg"/>
+            </a>
+            <a href="javascript:void(0);">
+                <img src="img/6.jpg"/>
+            </a>
+            
+        </div>
+        <script src="jqmin.js" type="text/javascript" charset="utf-8"></script>
+        <script type="text/javascript">
+            
+            
+            $('body').on('mousemove',function (e) {
+                $("img").each(function (index) {
+                    var dis = getDis(this,e);
+                    changeSize(dis,this,200,500,300);
+                })
+            })
+            // 根据距离, 调整大小
+            
+            function changeSize (dis,item,targetX,targetY,effectDis) {
+                var item = $(item);
+                var w = item.width();
+                var h = item.height();
+                var effectDis = effectDis || 500;
+                // 这里简单回顾了一下惰性函数. 主要是希望, 这个w,h值能够被初始化.
+                changeSize = function (dis,item,targetX,targetY) {
+                    
+                    var disx = Math.min(dis,effectDis);
+                    var disy = Math.min(dis,effectDis);
+                    var item = $(item);
+					
+                    
+                    // 基本效果是, 距离越远, 大小越小. 两者反比.
+                    // 当两者距离为0 时, 为最大值, 
+                        // 这一段不太好想.
+                    
+                    var sizeX = (effectDis - disx) / effectDis * (targetX - w) + w;
+                    var sizeY = (effectDis - disy) / effectDis * (targetY - h) + h;
+                    item.css({
+                        'width' : sizeX + 'px',
+                        'height' : sizeY + 'px'
+                    })
+                }
+                changeSize();
+            }
+            
+            
+            // 求出鼠标位置和 元素中心位置的距离
+            function getDis (item,e) {
+                // 元素默认宽高
+                var item = $(item);
+                var w = item.width();
+                var h = item.height();
+                
+                getDis = function (item,e) {
+                    var item = $(item);
+                    //中心左顶点相对于文档坐标
+                    var l = item.offset().left;
+                    var t = item.offset().top;
+                    // 元素中心点坐标
+                    var ox = l + w/2;
+                    var oy = t + h/2;
+                    // 鼠标坐标
+                    var x = e.clientX;
+                    var y = e.clientY;
+                    // 应用勾股定理, 求出距离
+                    var dis = parseInt(Math.sqrt(Math.pow(Math.abs(ox - x),2) + Math.pow(Math.abs(ox - x),2)));
+                    return dis
+                }
+                return getDis(item,e);
+            }
+            
+            
+        </script>
+    </body>
+</html>
